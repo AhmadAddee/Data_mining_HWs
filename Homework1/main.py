@@ -92,10 +92,3 @@ if __name__ == "__main__":
     hashed, exact, sigs, est, candidates = perform_lsh(docs, args.shingle_length, args.signature_length, args.threshold, bands)
 
     print_result(hashed, exact, sigs, est, candidates, bands, args.shingle_length, args.shingle_length, args.threshold)
-
-
-"""
-py .\Data_mining_HWs\Homework1\main.py --d "C:\\Skolan\\TSEDM1\\Data mining ID2222\\Data_mining_HWs\\Homework1\\dataset\\mini_newsgroups\\alt.atheism\\51121" "C:\\Skolan\\TSEDM1\\Data mining ID2222\\Data_mining_HWs\\Homework1\\dataset\\mini_newsgroups\\alt.atheism\\51126" -k 2 -n 128 -t 0.8 -b 8
-py .\Data_mining_HWs\Homework1\main.py -z "C:\\Skolan\\TSEDM1\\Data mining ID2222\\Data_mining_HWs\\Homework1\\dataset\\twenty+newsgroups.zip" -nod 1000 -k 2 -n 128 -t 0.8 -b 8
-py .\Data_mining_HWs\Homework1\main.py -nod 100 -k 3 -n 10 -t 0.8 -b 5
-"""
