@@ -1,27 +1,8 @@
 from __future__ import annotations
-
-import os.path
 from collections import defaultdict
-from pathlib import Path
 import hashlib
-import itertools
 import random
 from dataclasses import dataclass
-from wsgiref.util import request_uri
-import argparse
-
-
-# Goal: Implement shingling, min-hashing, and locality-sensitive hashing (LSH)
-# to find textually similar documents.
-
-# Steps:
-# 1. Shingling: Convert documents into sets of k-shingles.
-# 2. Min-Hashing: Generate MinHash signatures for the shingle sets.
-# 3. Locality-Sensitive Hashing (LSH): Apply LSH to group similar documents.
-
-# Finally, write a program that uses the implementation to find similar documents
-# in a corpus of 5-10 or more documents, such as web pages or emails.
-
 
 # Task 1: Shingling
 @dataclass

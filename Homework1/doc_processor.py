@@ -35,5 +35,5 @@ def get_text_dict(doc_list:list[Path] = None) -> dict[str, str]:
             "doc6": "This sentence is unrelated to others and should have low similarity.",
             "doc7": "This sentence is unrelated to others and should have low similarity.",
         }
-    doc_dict = {f"doc{doc.name}": doc.read_text() for doc in doc_list}
+    doc_dict = {f"{doc.parent.name}\\{doc.name}": doc.read_text() for doc in doc_list}
     return doc_dict
