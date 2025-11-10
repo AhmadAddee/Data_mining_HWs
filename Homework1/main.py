@@ -4,6 +4,7 @@ import itertools
 from pathlib import Path
 from find_similar_items import Shingling , CompareSets, MinHashing, CompareSignatures, LSH
 from doc_processor import read_zipped_docs, get_text_dict
+import benchmark
 
 def perform_lsh(docs: dict[str, str], k: int, signature_len: int, threshold: float, bands: int):
     # Shingles
@@ -70,7 +71,17 @@ if __name__ == "__main__":
     parser.add_argument("--signature-length", "-n", type=int, default=100, help="Length of MinHash signature.")
     parser.add_argument("--threshold", "-t", type=float, default=0.8, help="Similarity threshold for LSH.")
     parser.add_argument("--bands", "-b", type=int, default=None, help="Number of bands for LSH")
-    # parser.add_argument("--seed", "-s", type=int, default=42, help="Random seed for MinHash hash families")
+
+    # Only for benchmarking grid
+    parser.add_argument("--benchmark", action="store_true", help="Run timing grid an write CSV (see grid flags below).")
+    parser.add_argument("--grid-k", type=str, default="10", help="Comma-separated k values, e.g. '8,10,12'")
+    parser.add_argument("--grid-siglen", type=str, default="128", help="Comma-separated signature lenghts, e.g. '64, 128, 256'")
+    parser.add_argument("--grid-threshold", type=str, default="0.8", help="Comma-separated thresholds, e.g. '0.7, 0.8, 0.9'")
+    parser.add_argument("--grid-bands", type=str, default="auto", help="Comma-separated bands or 'auto', e.g. 'auto' or '8,16'.")
+    parser.add_argument("--sizes", type=str, default="", help="Comma-separated corpus sizes, e.g. '5,10,20'. Defaults: use all sizes up to N.")
+    parser.add_argument("--repeats", type=int, default=1, help="Number of repeats per grid point (averaged for plots).")
+    parser.add_argument("--csv-out", type=str, default="benchmark.csv", help="Output CSV path.")
+    parser.add_argument("--plot-out", type=str, default="", help="Optional PNG path for runtime vs. size plot.")
 
     args = parser.parse_args()
 
@@ -81,6 +92,37 @@ if __name__ == "__main__":
     else:
         docs = get_text_dict([Path(doc) for doc in args.docs] if args.docs else None)
 
+    # Only for benchmarking grid
+    # ------------------------------
+    if args.benchmark:
+        if args.sizes.strip():
+            sizes = benchmark._parse_int_list(args.sizes)
+        else:
+            N = len(docs)
+            sizes = sorted({min(5, N), max(N // 2, 2), N})
+
+        k_list = benchmark._parse_int_list(args.grid_k)
+        siglens = benchmark._parse_int_list(args.grid_siglen)
+        trhesholds = benchmark._parse_float_list(args.grid_threshold)
+        bands_list = [s.strip() for s in args.grid_bands.split(",") if s.strip()]
+
+        plot_out = args.plot_out if args.plot_out.strip() else None
+
+        benchmark.run_benchmark_grid(
+            docs=docs,
+            sizes=sizes,
+            k_list=k_list,
+            siglens=siglens,
+            thresholds=trhesholds,
+            bands_list=bands_list,
+            repeats=max(1, args.repeats),
+            csv_out=args.csv_out,
+            plot_out=plot_out,
+        )
+        print(f"[OK] Wrote CSV to {args.csv_out}" + (f" and plot to {plot_out}" if plot_out else ""))
+        exit(0)
+    #---------------------------------
+    
     bands = args.bands
     if bands is None:
         bands = LSH.choose_bands(args.signature_length, args.threshold)
