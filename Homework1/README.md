@@ -23,7 +23,7 @@ you fetched in the previous step.
 
 #### How to run
 - You can run the batch script with the default parameters specified there, by double-clicking at the file, or from a CLI
-run `python run_app.bat`
+run `run_app.bat`
 - To use your own parameters, look at the CLI description by typing `python main.py --help`.
 - Another way to run the app is to specify only two (or more) documents to compare. For example,
 `python main.py --docs <document1.txt> <document2.txt>` 
