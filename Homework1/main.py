@@ -91,4 +91,4 @@ if __name__ == "__main__":
 
     hashed, exact, sigs, est, candidates = perform_lsh(docs, args.shingle_length, args.signature_length, args.threshold, bands)
 
-    print_result(hashed, exact, sigs, est, candidates, bands, args.shingle_length, args.shingle_length, args.threshold)
+    print_result(hashed, exact, sigs, est, candidates, bands, args.shingle_length, args.signature_length, args.threshold)
