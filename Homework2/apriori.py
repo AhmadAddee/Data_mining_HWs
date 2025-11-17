@@ -33,7 +33,7 @@ def parse_args():
     p.add_argument("--path", type=str, required=True, help="Path to transaction file")
     p.add_argument("--min_support", type=int, default=None, help="Absolute min support (overrides percent)")
     p.add_argument("--min_support_percent", type=float, default=1.0, help="Percent support (default 1.0)")
-    p.add_argument("--min_conf", type=float, default=0.6, help="Minimum confidence (default 0.6)")
+    p.add_argument("--min_conf", type=float, default=0.5, help="Minimum confidence (default 0.5)")
     return p.parse_args()
 
 

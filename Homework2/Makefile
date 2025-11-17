@@ -1,8 +1,8 @@
 .PHONY: run
 
-# Change DATA path
-DATA=<"replace with path to dataset">
-MIN_SUPPORT_PERCENT=3.0
+# Edit DATA path
+DATA=C:\VSC Omar\Data Mining\Data_mining_HWs\Homework2\Dataset\T10I4D100K.dat    #./T10I4D100K.dat
+MIN_SUPPORT_PERCENT=1.0
 MIN_CONF=0.5
 
 run:
