@@ -74,7 +74,7 @@ class Apriori:
         for c in candidates:
             all_subset_frequent = True
             # all (k-1)-subsets of this candidate
-            for subset in combinations(c, k-1):
+            for subset in combinations(c, k - 1):
                 if frozenset(subset) not in prev_frequent_set:
                     all_subset_frequent = False
                     break

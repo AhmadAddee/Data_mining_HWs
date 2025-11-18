@@ -1,9 +1,7 @@
-import os
 import argparse
-import itertools
-from pathlib import Path
 from frequent_itemsets import Apriori
 from association_rules import AssociationRules
+
 
 def perf_assoc_rules(transactions: list[frozenset], s: int, c: float):
     print(f"Finding frequent itemsets in the corpus: {len(transactions)} transactions, with support threshold of {s}")
