@@ -1,5 +1,4 @@
 import random
-from collections import defaultdict
 from triest_base import TriestBase
 
 

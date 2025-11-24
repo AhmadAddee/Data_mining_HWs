@@ -2,9 +2,8 @@ import gzip
 import argparse
 from pathlib import Path
 import matplotlib.pyplot as plt
-
-#from triest_base import TriestBase as Triest
-from triest_impr import TriestImpr as Triest
+from triest_base import TriestBase as Triest
+#from triest_impr import TriestImpr as Triest
 
 TRUE_TRIANGLES = 8910005
 
