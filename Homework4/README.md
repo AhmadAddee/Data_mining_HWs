@@ -15,7 +15,7 @@ Study and implement the spectral graph clustering algorithm described in the pap
 - Install required Python packages, `pip install -r requirements.txt`
 
 #### Datasets
-- From [Stanford Large Network Dataset Collection](https://snap.stanford.edu/data/), go to [Note Dame web graph](https://snap.stanford.edu/data/web-NotreDame.html) and download the gzip-file. Locate the file under [dataset](dataset).
+- Download the files mentioned in [Task](#task), and locate the file under [dataset](dataset).
 - In [run_app.bat](run_app.bat) (on Mac/Linux, use [run_app.sh](run_app.sh)), modify `FILE_PATH` to point to the zip file
 you fetched in the previous step.
 

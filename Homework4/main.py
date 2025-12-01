@@ -1,6 +1,6 @@
 import os
 
-from spectral_clustering import load_graph, load_synthetic_graph
+from spectral_clustering import load_graph
 from spectral_clustering import spectral_clustering, estimate_k_from_eigengap
 from pathlib import Path
 from matplotlib import pyplot as plt
@@ -14,7 +14,8 @@ def plot_results(A, eigenvalues, labels, name, filename):
 
     # Plot 1: Eigenvalue spectrum (helps visualize eigengap for choosing k)
     n = min(20, len(eigenvalues))
-    axes[0].bar(range(1, n+1), eigenvalues[:n], color='steelblue')
+    axes[0].plot(range(1, n+1), eigenvalues[:n], marker='o')
+    axes[0].set_ylim(0, max(eigenvalues[:n]) * 1.1)
     axes[0].set_xlabel('Eigenvalue Index')
     axes[0].set_ylabel('Eigenvalue')
     axes[0].set_title(f'{name} - Eigenvalues')
@@ -29,11 +30,7 @@ def plot_results(A, eigenvalues, labels, name, filename):
         # scipy sparse matrix -> convert to dense numpy array
         A_sorted = A_sorted.toarray().astype(float)
     else:
-        try:
-            A_sorted = np.asarray(A_sorted, dtype=float)
-        except ValueError:
-            # fallback: convert row-by-row (handles nested sequences)
-            A_sorted = np.array([np.array(row, dtype=float) for row in A_sorted])
+        A_sorted = np.asarray(A_sorted, dtype=float)
 
     im = axes[1].imshow(A_sorted, cmap='Blues')
     axes[1].set_title(f'{name} - Adjacency Matrix (by cluster)')
@@ -49,22 +46,39 @@ def plot_results(A, eigenvalues, labels, name, filename):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Spectral csustering")
-    parser.add_argument("--data-file", "-d", type=str, required=True, help="The path of the dataset.")
-    parser.add_argument("--communities", "-k", type=int, nargs="+", help="Value of k.")
-    parser.add_argument("--plot", action="store_true", help="Disable plotting (just print results).")
+    parser = argparse.ArgumentParser(description="Spectral clustering on different graphs")
+    parser.add_argument("--data-dir", "-d", type=str, required=True, help="Folder containing the graph .dat files.")
+    parser.add_argument("--communities", "-k", type=int, help="Number of communities k (if omitted, use eigengap heuristic).")
+    parser.add_argument("--plot", action="store_true", help="Enable plotting and save result images.")
     args = parser.parse_args()
 
     k = args.communities
-    datafile = args.data_file
+    data_dir = args.data_dir
+    real_data_path = f"{data_dir}/example1.dat"
+    syn_data_path  = f"{data_dir}/example2.dat"
 
-    W_real, nodes_real = load_graph(Path(datafile))
-    k_real, evals_real = estimate_k_from_eigengap(W_real, max_k=10)
-    if not k:
-        k_real, evals_real = estimate_k_from_eigengap(W_real, max_k=10)
+    A_real, nodes_real = load_graph(real_data_path)
+    if k is None:
+        k_real, evals_real = estimate_k_from_eigengap(A_real, max_k=10)
+    else:
+        k_real = k
+        _, evals_real = estimate_k_from_eigengap(A_real, max_k=10)
+
     print("Suggested k for real graph:", k_real, "eigenvalues:", evals_real)
-    labels_real = spectral_clustering(W_real, k=k_real)
+    labels_real = spectral_clustering(A_real, k=k_real)
 
     if args.plot:
-        path = os.getcwd()
-        plot_results(W_real, evals_real, labels_real, "Real plt", f"{path}/result.png")
+        plot_results(A_real, evals_real, labels_real, "Eigenvalues", f"{data_dir}/example1.png")
+
+    A_syn, nodes_syn = load_graph(syn_data_path)
+    if k is None:
+        k_syn, evals_syn = estimate_k_from_eigengap(A_syn, max_k=10)
+    else:
+        k_syn = k
+        _, evals_syn = estimate_k_from_eigengap(A_syn, max_k=10)
+
+    print("Suggested k for synthetic graph:", k_syn, "eigenvalues:", evals_syn)
+    labels_syn = spectral_clustering(A_syn, k=k_syn)
+
+    if args.plot:
+        plot_results(A_syn, evals_syn, labels_syn, "Eigenvalues", f"{data_dir}/example2.png")
